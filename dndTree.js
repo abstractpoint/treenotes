@@ -77,7 +77,7 @@ function draw_tree(error, treeData, callback) {
     // size of the diagram
     var viewerWidth = $(document).width();
     var viewerHeight = $(document).height();
-
+    
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
 
@@ -259,7 +259,8 @@ function draw_tree(error, treeData, callback) {
     baseSvg.append("rect")
         .attr("width", "100%")
         .attr("height", "100%")
-        .attr("fill", "white")
+        .attr('class', 'main')
+
         
     baseSvg.call(zoomListener);
 
@@ -356,24 +357,6 @@ function draw_tree(error, treeData, callback) {
         }
     }
 
-    // Helper functions for collapsing and expanding nodes.
-
-    function collapse(d) {
-        if (d.children) {
-            d._children = d.children;
-            d._children.forEach(collapse);
-            d.children = null;
-        }
-    }
-
-    function expand(d) {
-        if (d._children) {
-            d.children = d._children;
-            d.children.forEach(expand);
-            d._children = null;
-        }
-    }
-
     var overCircle = function(d) {
         selectedNode = d;
         updateTempConnector();
@@ -382,26 +365,6 @@ function draw_tree(error, treeData, callback) {
         selectedNode = null;
         updateTempConnector();
     };
-
-  // color a node properly
-  function colorNode(d) {
-        result = "#fff";
-        if (d.synthetic == true) {
-          result = (d._children || d.children) ? "darkgray" : "lightgray";
-        }
-        else {
-          if (d.type == "USDA") {
-            result = (d._children || d.children) ? "orangered" : "orange";
-          } else if (d.type == "Produce") {
-            result = (d._children || d.children) ? "yellowgreen" : "yellow";
-          } else if (d.type == "RecipeIngredient") {
-            result = (d._children || d.children) ? "skyblue" : "royalblue";
-          } else {
-            result = "lightsteelblue"
-          }
-        }
-        return result;
-    }
 
 
     // Function to update the temporary connector indicating dragging affiliation
@@ -447,25 +410,10 @@ function draw_tree(error, treeData, callback) {
         zoomListener.translate([x, y]);
     }
 
-    // Toggle children function
-
-    function toggleChildren(d) {
-        if (d.children) {
-            d._children = d.children;
-            d.children = null;
-        } else if (d._children) {
-            d.children = d._children;
-            d._children = null;
-        }
-        return d;
-    }
-
     // Toggle children on click.
 
     function click(d) {
         if (d3.event.defaultPrevented) return; // click suppressed
-        d = toggleChildren(d);
-        update(d);
         centerNode(d);
     }
 
@@ -519,7 +467,6 @@ function draw_tree(error, treeData, callback) {
         nodeEnter.append("circle")
             .attr('class', 'nodeCircle')
             .attr("r", 0)
-            .style("fill", colorNode);
 
         nodeEnter.append("text")
             .attr("x", function(d) {
@@ -540,7 +487,6 @@ function draw_tree(error, treeData, callback) {
             .attr('class', 'ghostCircle')
             .attr("r", 30)
             .attr("opacity", 0.2) // change this to zero to hide the target area
-        .style("fill", "red")
             .attr('pointer-events', 'mouseover')
             .on("mouseover", function(node) {
                 overCircle(node);
@@ -564,7 +510,6 @@ function draw_tree(error, treeData, callback) {
         // Change the circle fill depending on whether it has children and is collapsed
         node.select("circle.nodeCircle")
             .attr("r", 4.5)
-            .style("fill", colorNode);
 
         // Add a context menu
         node.on('contextmenu', d3.contextMenu(menu));

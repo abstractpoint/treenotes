@@ -1,3 +1,6 @@
+.main {
+  fill:#eee;
+}
 .node {
   cursor: pointer;
 }
@@ -7,14 +10,15 @@
 }
  
 .node circle {
-  fill: #fff;
-  stroke: steelblue;
+  fill: yellow;
+  stroke: #000;
   stroke-width: 1.5px;
 }
  
 .node text {
-  font-size:10px; 
+  font-size:12px; 
   font-family:sans-serif;
+  fill:#000
 }
  
 .link {
@@ -41,3 +45,41 @@
         display: none;
 }
 
+.lightSwitch {
+  position:absolute;
+  bottom:0;
+  right:0;
+  cursor: pointer;
+}
+.lightSwitch svg {
+  fill: #ccc;
+}
+
+/* DARK */
+
+.dark .main {
+  fill:#5a5a5a;
+}
+
+.dark .overlay{
+    background-color:#EEE;
+}
+ 
+.dark .node circle {
+  fill: #5a5a5a;
+  stroke: #ffc802;
+}
+ 
+.dark .node text {
+  fill:#ffc802
+}
+ 
+.dark .link {
+  fill: none;
+  stroke-width: 2pt;
+  stroke: #ffc802;
+}
+
+.dark .lightSwitch svg {
+  fill: #888;
+}
