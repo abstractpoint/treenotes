@@ -328,14 +328,15 @@ function draw_tree(error, treeData, callback) {
                     if (typeof selectedNode.children !== 'undefined') {
                         selectedNode.children.push(draggingNode);
                     } else {
-                        selectedNode._children.push(draggingNode);
+                        selectedNode.children = [];
+                        selectedNode.children.push(draggingNode);
                     }
                 } else {
                     selectedNode.children = [];
                     selectedNode.children.push(draggingNode);
                 }
                 // Make sure that the node being added to is expanded so user can see added node is correctly moved
-                expand(selectedNode);
+                // expand(selectedNode);
                 sortTree();
                 endDrag();
             } else {

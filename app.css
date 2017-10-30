@@ -49,7 +49,7 @@ body {
 }
 
 .lightSwitch {
-  position:absolute;
+  position:fixed;
   bottom:5px;
   right:5px;
   cursor: pointer;
@@ -61,7 +61,7 @@ body {
 /* DARK */
 
 .dark .main {
-  fill:#5a5a5a;
+  fill:#00616b;
 }
 
 .dark .overlay{
@@ -69,20 +69,20 @@ body {
 }
  
 .dark .node circle {
-  fill: #5a5a5a;
-  stroke: #ffc802;
+  fill: #d8d811;
+  stroke: #c8faff;
 }
  
 .dark .node text {
-  fill:#ffc802
+  fill:#c8faff
 }
  
 .dark .link {
   fill: none;
-  stroke-width: 2pt;
-  stroke: #ffc802;
+  stroke-width: 1pt;
+  stroke: #00b3c5;
 }
 
 .dark .lightSwitch svg {
-  fill: #888;
+  fill: #00b3c5;
 }
