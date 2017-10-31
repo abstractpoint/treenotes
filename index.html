@@ -7,12 +7,15 @@
 </head>
 <body>
         <div id="RenameNodeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-          <h2 id="modalTitle">Rename Node</h2>
+          <h2 id="modalTitle">Edit Node</h2>
           <form id="RenameNodeForm">
             <div class="row">
               <div class="large-12 columns">
                 <label>Node name
                   <input type="text" class="inputName" id='RenameNodeName' placeholder="node name" />
+                </label>
+                <label>Node body
+                  <textarea type="text" class="inputBody" id='RenameNodeBody' placeholder="node body"></textarea>
                 </label>
               </div>
             </div>
@@ -37,6 +40,9 @@
                 <label>Node name
                   <input type="text" class="inputName" id='CreateNodeName' placeholder="node name" />
                 </label>
+                <label>Node body
+                  <textarea type="text" class="inputBody" id='CreateNodeBody' placeholder="node body"></textarea>
+                </label>
               </div>
             </div>
             <div class="row">
@@ -49,6 +55,14 @@
               </div>
             </div>
           </form>
+          <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+        </div>
+
+        <div id="ArchivedModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+          <h2 id="modalTitle">Archived Nodes</h2>
+          <div>
+            archived list
+          </div>
           <a class="close-reveal-modal" aria-label="Close">&#215;</a>
         </div>
 
@@ -82,13 +96,14 @@
                     });
 
                     var localtree = window.localStorage.getItem('tree');
+                    var localarchived = window.localStorage.getItem('archived');
 
                     var tree = {
                       "name": "flare",
                       "children": []
                     }
 
-                    var treeJSON = draw_tree(null, localtree ? JSON.parse(localtree) : tree , saveTree);
+                    var treeJSON = draw_tree(null, localtree ? JSON.parse(localtree) : tree , localarchived ? JSON.parse(localarchived) : [], saveTree);
 
 
                     $('.lightSwitch').on('click', function(){
@@ -96,10 +111,15 @@
                     })
                 });
 
-                function saveTree(tree) {
+                function saveTree(tree, archived) {
                   var jsonTree = window.CircularJSON.stringify(tree);
                   console.log(jsonTree);
+
+                  var jsonArchived = window.CircularJSON.stringify(archived);
+                  console.log(jsonArchived);
+                  
                   window.localStorage.setItem('tree', jsonTree);
+                  window.localStorage.setItem('archived', jsonArchived);
                 }
 
 

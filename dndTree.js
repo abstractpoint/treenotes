@@ -5,8 +5,10 @@ function close_modal() {
 var tree_root;
 var create_node_modal_active = false;
 var rename_node_modal_active = false;
+var archived_modal_active = false;
 var create_node_parent = null;
 var node_to_rename = null;
+var archived = [];
 
 function generateUUID(){
     var d = new Date().getTime();
@@ -17,6 +19,8 @@ function generateUUID(){
     });
     return uuid;
 };
+
+// A recursive helper function for performing some setup by walking through all nodes
 
 function create_node() {
         if (create_node_parent && create_node_modal_active) {
@@ -29,8 +33,10 @@ function create_node() {
                 }
                 id = generateUUID(); 
                 name = $('#CreateNodeName').val();
+                body = $('#CreateNodeBody').val();
                 new_node = { 'name': name, 
                              'id' :  id,
+                             'body' : body,
                              'depth': create_node_parent.depth + 1,                           
                              'children': []
                            };
@@ -38,6 +44,7 @@ function create_node() {
                 create_node_parent.children.push(new_node);
                 create_node_modal_active = false;
                 $('#CreateNodeName').val('');
+                $('#CreateNodeBody').val('');
 
         }
         close_modal();
@@ -47,8 +54,10 @@ function create_node() {
 function rename_node() {
         if (node_to_rename && rename_node_modal_active) {
                 name = $('#RenameNodeName').val();
-                console.log('New Node name: ' + name);
+                body = $('#RenameNodeBody').val();
+                console.log('New Node name: ' + name, body);
                 node_to_rename.name = name;
+                node_to_rename.body = body;
                 rename_node_modal_active = false;
 
         }
@@ -58,7 +67,7 @@ function rename_node() {
 
 outer_update = null;
 
-function draw_tree(error, treeData, callback) {
+function draw_tree(error, treeData, archivedData, callback) {
 
     // Calculate total nodes, max label length
     var totalNodes = 0;
@@ -73,6 +82,8 @@ function draw_tree(error, treeData, callback) {
     var i = 0;
     var duration = 750;
     var root;
+
+    archived = archivedData;
 
     // size of the diagram
     var viewerWidth = $(document).width();
@@ -93,6 +104,7 @@ function draw_tree(error, treeData, callback) {
                     action: function(elm, d, i) {
                             console.log('Rename node');
                             $("#RenameNodeName").val(d.name);
+                            $("#RenameNodeBody").val(d.body);
                             rename_node_modal_active = true;
                             node_to_rename = d
                             $("#RenameNodeName").focus();
@@ -107,6 +119,13 @@ function draw_tree(error, treeData, callback) {
                     }
             },
             {
+                    title: 'Archive node',
+                    action: function(elm, d, i) {
+                            console.log('Archive node');
+                            archive_node(d);
+                    }
+            },
+            {
                     title: 'Create child node',
                     action: function(elm, d, i) {
                             console.log('Create child node');
@@ -115,11 +134,15 @@ function draw_tree(error, treeData, callback) {
                             $('#CreateNodeModal').foundation('reveal', 'open');
                             $('#CreateNodeName').focus();
                     }
+            },
+            {
+                    title: 'View archived',
+                    action: function(elm, d, i) {
+                            archived_modal_active = true;
+                            $('#ArchivedModal').foundation('reveal', 'open');
+                    }
             }
     ]
-
-
-    // A recursive helper function for performing some setup by walking through all nodes
 
     function visit(parent, visitFn, childrenFn) {
         if (!parent) return;
@@ -161,6 +184,26 @@ function draw_tree(error, treeData, callback) {
        });
     }
 
+    function archive_node(node) {
+        visit(treeData, function(d) {
+               if (d.children) {
+                       for (var child of d.children) {
+                               if (child == node) {
+                                       d.children = _.without(d.children, child);
+
+                                       //save into archive
+                                       archived.push(node);
+
+                                       update(root);
+                                       break;
+                               }
+                       } 
+               }
+        },
+        function(d) {
+           return d.children && d.children.length > 0 ? d.children : null;
+       });
+    }
 
     // sort the tree according to the node names
 
@@ -587,7 +630,7 @@ function draw_tree(error, treeData, callback) {
             d.y0 = d.y;
         });
 
-        callback(root);
+        callback(root, archived);
     }
 
     outer_update = update;
