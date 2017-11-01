@@ -39,7 +39,7 @@ body {
 }
  
 .node circle {
-  fill: yellow;
+  fill: #ecce09;
   stroke: #000;
   stroke-width: 1.5px;
 }
@@ -87,7 +87,7 @@ body {
 /* DARK */
 
 .dark .main {
-  fill:#00616b;
+  fill:#091e2b;
 }
 
 .dark .overlay{
@@ -95,20 +95,22 @@ body {
 }
  
 .dark .node circle {
-  fill: #d8d811;
-  stroke: #c8faff;
+  fill: #916ab1;
+  stroke: #a5e0ff;
 }
  
 .dark .node text {
-  fill:#c8faff
+  fill:#bce8ff
 }
  
 .dark .link {
   fill: none;
   stroke-width: 1pt;
-  stroke: #00b3c5;
+  stroke: #156da9;
 }
 
 .dark .lightSwitch svg {
-  fill: #00b3c5;
+  fill: #176598;
 }
+
+
