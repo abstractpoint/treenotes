@@ -37,6 +37,7 @@ function create_node() {
                 new_node = { 'name': name, 
                              'id' :  id,
                              'body' : body,
+                             'created': (new Date()).toJSON(),
                              'depth': create_node_parent.depth + 1,                           
                              'children': []
                            };
@@ -100,7 +101,7 @@ function draw_tree(error, treeData, archivedData, callback) {
 
     var menu = [
             {
-                    title: 'Rename node',
+                    title: 'Edit node',
                     action: function(elm, d, i) {
                             console.log('Rename node');
                             $("#RenameNodeName").val(d.name);
@@ -190,7 +191,7 @@ function draw_tree(error, treeData, archivedData, callback) {
                        for (var child of d.children) {
                                if (child == node) {
                                        d.children = _.without(d.children, child);
-
+                                       node.archived = (new Date()).toJSON();
                                        //save into archive
                                        archived.push(node);
 
